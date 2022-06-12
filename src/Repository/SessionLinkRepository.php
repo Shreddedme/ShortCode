@@ -9,6 +9,11 @@ class SessionLinkRepository implements LinkRepository
         session_start();
     }
 
+    public function clear(): void
+    {
+        $_SESSION['links'] = [];
+    }
+
     function getByCode(string $code): array
     {
         return $_SESSION['links'];

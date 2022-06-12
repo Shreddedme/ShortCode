@@ -34,6 +34,13 @@ class LinkController extends AbstractController
         return $this->json($linkEntity);
     }
 
+    #[Route('/link/clear')]
+    public function clear()
+    {
+        $this->linkRepository->clear();
+        return $this->json([]);
+    }
+
     #[Route('/link/list')]
     public function list(): JsonResponse
     {
