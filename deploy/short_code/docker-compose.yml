@@ -1,0 +1,24 @@
+version: "3.5"
+services:
+  fpm_short-code:
+    container_name: fpm.short-code
+    image: ewwgenn/default_fpm_8.1
+    env_file: ./../../config/.env
+    restart: always
+    cap_add:
+      - ALL
+    volumes:
+      - "./../../:/www/"
+
+  nginx_short-code:
+    container_name: nginx.short-code
+    image: nginx:alpine
+    restart: always
+    depends_on:
+      - fpm_short-code
+    links:
+      - fpm_short-code:fpm_short-code.local
+    ports:
+      - "1001:80"
+    volumes:
+      - "./nginx:/etc/nginx/conf.d"
