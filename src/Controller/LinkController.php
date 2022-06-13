@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\CodeGenerator\ShortCodeGenerator;
 use App\Repository\LinkRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,7 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class LinkController extends AbstractController
 {
     public function __construct(
-        private readonly LinkRepository $linkRepository
+        private readonly LinkRepository $linkRepository,
+        private readonly ShortCodeGenerator $codeGenerator,
     ){}
 
     #[Route('/link', name: 'app_link')]
@@ -29,9 +31,10 @@ class LinkController extends AbstractController
         $originalUrl = $request->query->get('originalUrl');
         $linkEntity = null;
         if (!empty($originalUrl)) {
+            $shortCode = $this->codeGenerator->generate();
             $linkEntity = [
                 'originalURL' => $originalUrl,
-                'shortCode' => '',
+                'shortCode' => $shortCode,
                 'countTransition' => 0,
             ];
 
