@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\LinkRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,14 +24,19 @@ class LinkController extends AbstractController
     }
 
     #[Route('/link/create')]
-    public function create(): JsonResponse
+    public function create(Request $request): JsonResponse
     {
-        $linkEntity = [
-            'originalURL' => '',
-            'shortCode' => '',
-            'countTransition' => 0
-        ];
-        $this->linkRepository->save($linkEntity);
+        $originalUrl = $request->query->get('originalUrl');
+        $linkEntity = null;
+        if (!empty($originalUrl)) {
+            $linkEntity = [
+                'originalURL' => $originalUrl,
+                'shortCode' => '',
+                'countTransition' => 0,
+            ];
+
+            $this->linkRepository->save($linkEntity);
+        }
         return $this->json($linkEntity);
     }
 
