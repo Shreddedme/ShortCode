@@ -53,6 +53,14 @@ class LinkController extends AbstractController
     #[Route('/link/list')]
     public function list(): JsonResponse
     {
-        return $this->json($this->linkRepository->getByCode(''));
+        return $this->json($this->linkRepository->getAll());
+    }
+
+    #[Route('/link/get')]
+    public function getByCode(Request $request)
+    {
+        $code = $request->query->get('code');
+        $linkEntity = $this->linkRepository->getByCode($code);
+        return $this->json($linkEntity);
     }
 }
