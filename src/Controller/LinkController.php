@@ -30,7 +30,7 @@ class LinkController extends AbstractController
     {
         $originalUrl = $request->query->get('originalUrl');
         $linkEntity = null;
-        if (!empty($originalUrl)) {
+        if (filter_var($originalUrl, FILTER_VALIDATE_URL)) {
             $shortCode = $this->codeGenerator->generate();
             $linkEntity = [
                 'originalURL' => $originalUrl,
