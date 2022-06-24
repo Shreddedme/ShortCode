@@ -28,7 +28,7 @@ class LinkController extends AbstractController
     #[Route('/link/create')]
     public function create(Request $request): JsonResponse
     {
-        $originalUrl = $request->query->get('originalUrl');
+        $originalUrl = $request->get('originalUrl');
         $linkEntity = null;
         if (filter_var($originalUrl, FILTER_VALIDATE_URL)) {
             $shortCode = $this->codeGenerator->generate();
