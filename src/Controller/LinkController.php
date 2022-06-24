@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\CodeGenerator\ShortCodeGenerator;
+use App\Repository\FileLinkRepository;
 use App\Repository\LinkRepository;
+use App\Repository\SessionLinkRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class LinkController extends AbstractController
 {
     public function __construct(
-        private readonly LinkRepository $linkRepository,
+        private readonly FileLinkRepository $linkRepository,
         private readonly ShortCodeGenerator $codeGenerator,
     ){}
 
@@ -44,7 +46,7 @@ class LinkController extends AbstractController
     }
 
     #[Route('/link/clear')]
-    public function clear()
+    public function clear(): JsonResponse
     {
         $this->linkRepository->clear();
         return $this->json([]);
