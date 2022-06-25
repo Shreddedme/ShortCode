@@ -72,6 +72,9 @@ class LinkController extends AbstractController
     {
         $code = $request->query->get('code');
         $linkEntity = $this->linkRepository->getByCode($code);
+        $linkEntity['countTransition']++;
+        $this->linkRepository->update($linkEntity);
         return $this->redirect($linkEntity['originalURL']);
+
     }
 }

@@ -33,4 +33,9 @@ class SessionLinkRepository implements LinkRepository
         }
         return [];
     }
+
+    function update(array $link): void
+    {
+
+    }
 }

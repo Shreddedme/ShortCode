@@ -39,4 +39,16 @@ class FileLinkRepository implements LinkRepository
         return [];
     }
 
+    function update(array $link): void
+    {
+        $oldData = $this->getAll();
+        foreach ($oldData as &$elem)
+        if($elem['shortCode'] == $link['shortCode']) {
+            $elem = $link;
+        }
+        $serialized = json_encode($oldData);
+        file_put_contents(self::FILE_PATH, $serialized);
+
+    }
+
 }

@@ -8,4 +8,5 @@ interface LinkRepository
     function save(array $link): void;
     function clear(): void;
     function getByCode(string $code): array;
+    function update(array $link): void;
 }
