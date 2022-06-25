@@ -8,8 +8,8 @@ class FileLinkRepository implements LinkRepository
 
     function getAll(): array
     {
-        $data = file(self::FILE_PATH)[0];
-        return json_decode($data, true);
+        $data = file(self::FILE_PATH)[0] ?? '';
+        return json_decode($data, true) ?? [];
     }
 
     function save(array $link): void
@@ -30,7 +30,7 @@ class FileLinkRepository implements LinkRepository
     {
         $links = $this->getAll();
         foreach ($links as $link) {
-           if ($link['ShortCode'] === $code) {
+           if ($link['shortCode'] === $code) {
                return $link;
            }
         }

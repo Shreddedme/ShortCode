@@ -6,6 +6,7 @@ use App\CodeGenerator\ShortCodeGenerator;
 use App\Repository\FileLinkRepository;
 use App\Repository\LinkRepository;
 use App\Repository\SessionLinkRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -59,11 +60,19 @@ class LinkController extends AbstractController
     }
 
     #[Route('/link/get')]
-    public function getByCode(Request $request)
+    public function getByCode(Request $request): JsonResponse
     {
         $code = $request->query->get('code');
         $linkEntity = $this->linkRepository->getByCode($code);
-        //return $this->json($linkEntity);
+        return $this->json($linkEntity);
+    }
+
+    #[Route('/r')]
+    public function codeRedirect(Request $request): RedirectResponse
+    {
+        $code = $request->query->get('code');
+        $linkEntity = $this->linkRepository->getByCode($code);
         return $this->redirect($linkEntity['originalURL']);
+
     }
 }
