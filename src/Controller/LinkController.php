@@ -73,6 +73,5 @@ class LinkController extends AbstractController
         $code = $request->query->get('code');
         $linkEntity = $this->linkRepository->getByCode($code);
         return $this->redirect($linkEntity['originalURL']);
-
     }
 }

@@ -23,7 +23,8 @@ class FileLinkRepository implements LinkRepository
 
     function clear(): void
     {
-
+        $oldData = [];
+        file_put_contents(self::FILE_PATH, $oldData);
     }
 
     function getByCode(string $code): array
