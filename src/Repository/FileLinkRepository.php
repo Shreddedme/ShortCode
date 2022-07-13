@@ -16,9 +16,9 @@ class FileLinkRepository implements LinkRepository
     {
         $oldData = $this->getAll();
         $oldData[] = $link;
-        $serialized = json_encode($oldData);
-        file_put_contents(self::FILE_PATH, $serialized);
-
+        $this->rewriteFile($oldData);
+//        $serialized = json_encode($oldData);
+//        file_put_contents(self::FILE_PATH, $serialized);
     }
 
     function clear(): void
@@ -42,13 +42,29 @@ class FileLinkRepository implements LinkRepository
     function update(array $link): void
     {
         $oldData = $this->getAll();
-        foreach ($oldData as &$elem)
-        if($elem['shortCode'] == $link['shortCode']) {
-            $elem = $link;
+        foreach ($oldData as &$elem) {
+            if ($elem['shortCode'] == $link['shortCode']) {
+                $elem = $link;
+            }
         }
-        $serialized = json_encode($oldData);
-        file_put_contents(self::FILE_PATH, $serialized);
-
+        $this->rewriteFile($oldData);
     }
 
+    function delete(string $code): void
+    {
+        $data = $this->getAll();
+
+        foreach ($data as $key=>$item) {
+            if ($item['shortCode'] === $code) {
+               unset($data[$key]);
+            }
+        }
+        $this->rewriteFile($data);
+    }
+
+    private function rewriteFile(array $data): void
+    {
+        $serialized = json_encode($data);
+        file_put_contents(self::FILE_PATH, $serialized);
+    }
 }

@@ -9,4 +9,5 @@ interface LinkRepository
     function clear(): void;
     function getByCode(string $code): array;
     function update(array $link): void;
+    function delete(string $code): void;
 }

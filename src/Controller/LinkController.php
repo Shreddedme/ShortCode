@@ -75,6 +75,13 @@ class LinkController extends AbstractController
         $linkEntity['countTransition']++;
         $this->linkRepository->update($linkEntity);
         return $this->redirect($linkEntity['originalURL']);
+    }
 
+    #[Route('/link/delete')]
+    public function delete (Request $request): JsonResponse
+    {
+        $code = $request->query->get('code');
+        $this->linkRepository->delete($code);
+        return $this->json([]);
     }
 }
