@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use PDO;
+
 class DataBaseLinkRepository implements LinkRepository
 {
-    private \PDO $connection;
+    private PDO $connection;
 
     public function __construct()
     {
@@ -14,7 +16,7 @@ class DataBaseLinkRepository implements LinkRepository
         $dbUser = 'customer-activity';
         $dbPassword = 'customer-activity';
         $dsn = "pgsql:dbname=$dbName;host=$host;port=$dbPort";
-        $this->connection = new \PDO($dsn, $dbName, $dbPassword);
+        $this->connection = new PDO($dsn, $dbUser, $dbPassword);
     }
 
     function getAll(): array
@@ -24,7 +26,7 @@ class DataBaseLinkRepository implements LinkRepository
         $statement = $this->connection->prepare($sql);
         $statement->execute([]);
 
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     function save(array $link): void
@@ -45,7 +47,7 @@ class DataBaseLinkRepository implements LinkRepository
         $statement = $this->connection->prepare($sql);
         $statement->execute($params);
 
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     function update(array $link): void
