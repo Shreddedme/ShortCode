@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class LinkController extends AbstractController
 {
     public function __construct(
-        private readonly FileLinkRepository $linkRepository,
+        private readonly LinkRepository $linkRepository,
         private readonly ShortCodeGenerator $codeGenerator,
     ){}
 

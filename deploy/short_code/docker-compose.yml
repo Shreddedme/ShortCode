@@ -22,3 +22,13 @@ services:
       - "1001:80"
     volumes:
       - "./nginx:/etc/nginx/conf.d"
+
+  postgres_customer-activity:
+    image: postgres:13
+    container_name: postgres-database
+    ports:
+      - 5437:5432
+    environment:
+      POSTGRES_USER: customer-activity
+      POSTGRES_PASSWORD: customer-activity
+      POSTGRES_DB: customer-activity

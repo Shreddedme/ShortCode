@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-class SessionLinkRepository
+class SessionLinkRepository implements LinkRepository
 {
     public function __construct()
     {
@@ -37,5 +37,10 @@ class SessionLinkRepository
     function update(array $link): void
     {
 
+    }
+
+    function delete(string $code): void
+    {
+        // TODO: Implement delete() method.
     }
 }
