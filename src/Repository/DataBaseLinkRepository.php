@@ -31,12 +31,15 @@ class DataBaseLinkRepository implements LinkRepository
 
     function save(array $link): void
     {
+        $params = [
+            'url' => $link['original_url'],
+            'code' => $link['short_code'],
+            'count' => $link['count_transition']
+        ];
+        $sql = 'INSERT INTO link_entity  (original_url, short_code, count_transition) VALUES (:url, :code, :count)';
 
-    }
-
-    function clear(): void
-    {
-        // TODO: Implement clear() method.
+        $statement = $this->connection->prepare($sql);
+        $statement->execute($params);
     }
 
     function getByCode(string $code): array
@@ -47,16 +50,28 @@ class DataBaseLinkRepository implements LinkRepository
         $statement = $this->connection->prepare($sql);
         $statement->execute($params);
 
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $result[0] ?? [];
     }
 
     function update(array $link): void
     {
-        // TODO: Implement update() method.
+        $params = [
+            'code' => $link ['short_code'],
+            'count_transition' => $link['count_transition']
+        ];
+        $sql = 'UPDATE link_entity SET count_transition = :count_transition WHERE short_code = :code';
+
+        $statement = $this->connection->prepare($sql);
+        $statement->execute($params);
     }
 
     function delete(string $code): void
     {
-        // TODO: Implement delete() method.
+        $params['code'] = $code;
+        $sql = 'DELETE FROM link_entity WHERE short_code = :code';
+
+        $statement = $this->connection->prepare($sql);
+        $statement->execute($params);
     }
 }

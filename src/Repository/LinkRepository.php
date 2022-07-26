@@ -6,7 +6,6 @@ interface LinkRepository
 {
     function getAll(): array;
     function save(array $link): void;
-    function clear(): void;
     function getByCode(string $code): array;
     function update(array $link): void;
     function delete(string $code): void;

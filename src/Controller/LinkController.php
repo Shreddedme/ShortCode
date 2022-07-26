@@ -36,9 +36,9 @@ class LinkController extends AbstractController
         if (filter_var($originalUrl, FILTER_VALIDATE_URL)) {
             $shortCode = $this->codeGenerator->generate();
             $linkEntity = [
-                'originalURL' => $originalUrl,
-                'shortCode' => $shortCode,
-                'countTransition' => 0,
+                'original_url' => $originalUrl,
+                'short_code' => $shortCode,
+                'count_transition' => 0,
             ];
 
             $this->linkRepository->save($linkEntity);
@@ -72,9 +72,9 @@ class LinkController extends AbstractController
     {
         $code = $request->query->get('code');
         $linkEntity = $this->linkRepository->getByCode($code);
-        $linkEntity['countTransition']++;
+        $linkEntity['count_transition']++;
         $this->linkRepository->update($linkEntity);
-        return $this->redirect($linkEntity['originalURL']);
+        return $this->redirect($linkEntity['original_url']);
     }
 
     #[Route('/link/delete')]
