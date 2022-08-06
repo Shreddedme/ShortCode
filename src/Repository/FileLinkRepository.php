@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-class FileLinkRepository implements LinkRepository
+class FileLinkRepository
 {
     private CONST FILE_PATH = '/www/RunTime/file.txt';
 

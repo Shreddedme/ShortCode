@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use PDO;
 
-class DataBaseLinkRepository implements LinkRepository
+class DataBaseLinkRepository
 {
     private PDO $connection;
 

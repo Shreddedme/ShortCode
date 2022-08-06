@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-class SessionLinkRepository implements LinkRepository
+class SessionLinkRepository
 {
     public function __construct()
     {

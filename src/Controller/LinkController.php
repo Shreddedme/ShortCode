@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\CodeGenerator\ShortCodeGenerator;
-use App\Repository\FileLinkRepository;
+use App\Entity\Link;
 use App\Repository\LinkRepository;
-use App\Repository\SessionLinkRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,6 +17,7 @@ class LinkController extends AbstractController
     public function __construct(
         private readonly LinkRepository $linkRepository,
         private readonly ShortCodeGenerator $codeGenerator,
+        private readonly EntityManagerInterface $entityManager
     ){}
 
     #[Route('/link', name: 'app_link')]
@@ -29,28 +30,17 @@ class LinkController extends AbstractController
     }
 
     #[Route('/link/create')]
-    public function create(Request $request): JsonResponse
+    public function create(Request $request ): JsonResponse
     {
         $originalUrl = $request->get('originalUrl');
         $linkEntity = null;
         if (filter_var($originalUrl, FILTER_VALIDATE_URL)) {
             $shortCode = $this->codeGenerator->generate();
-            $linkEntity = [
-                'original_url' => $originalUrl,
-                'short_code' => $shortCode,
-                'count_transition' => 0,
-            ];
-
-            $this->linkRepository->save($linkEntity);
+            $linkEntity = new Link($originalUrl, $shortCode, 0);
+            $this->entityManager->persist($linkEntity);
+            $this->entityManager->flush();
         }
-        return $this->json($linkEntity);
-    }
-
-    #[Route('/link/clear')]
-    public function clear(): JsonResponse
-    {
-        $this->linkRepository->clear();
-        return $this->json([]);
+        return $this->json($linkEntity?->getId());
     }
 
     #[Route('/link/list')]
