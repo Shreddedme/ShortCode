@@ -53,7 +53,8 @@ class LinkController extends AbstractController
     public function getByCode(Request $request): JsonResponse
     {
         $code = $request->query->get('code');
-        $linkEntity = $this->linkRepository->getByCode($code);
+        $linkEntity = $this->entityManager->getRepository(Link::class)->find(1);
+        var_dump($linkEntity); die();
         return $this->json($linkEntity);
     }
 
