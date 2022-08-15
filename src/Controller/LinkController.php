@@ -12,13 +12,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LinkController extends AbstractController
+class LinkController extends WrapperAbstractController
 {
     public function __construct(
         private readonly LinkRepository $linkRepository,
         private readonly ShortCodeGenerator $codeGenerator,
         private readonly EntityManagerInterface $entityManager
-    ){}
+    ){
+        parent::__construct();
+    }
 
     #[Route('/link', name: 'app_link')]
     public function index(): JsonResponse
@@ -46,15 +48,16 @@ class LinkController extends AbstractController
     #[Route('/link/list')]
     public function list(): JsonResponse
     {
-        return $this->json($this->linkRepository->getAll());
+        $result = $this->entityManager->getRepository(Link::class)->findAll();
+        return $this->json($result);
     }
 
     #[Route('/link/get')]
     public function getByCode(Request $request): JsonResponse
     {
         $code = $request->query->get('code');
-        $linkEntity = $this->entityManager->getRepository(Link::class)->find(1);
-        var_dump($linkEntity); die();
+        $repository = $this->entityManager->getRepository(Link::class);
+        $linkEntity = $repository->findOneBy(['shortCode' => $code]);
         return $this->json($linkEntity);
     }
 

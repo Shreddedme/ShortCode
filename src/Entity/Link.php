@@ -14,19 +14,19 @@ class Link
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $OriginalURL = null;
+    private ?string $originalUrl = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $ShortCode = null;
+    private ?string $shortCode = null;
 
     #[ORM\Column]
-    private ?int $CountTransition = null;
+    private ?int $countTransition = null;
 
     public function __construct (string $OriginalURL, string $ShortCode, int $CountTransition)
     {
-        $this->OriginalURL = $OriginalURL;
-        $this->ShortCode = $ShortCode;
-        $this->CountTransition = $CountTransition;
+        $this->originalUrl = $OriginalURL;
+        $this->shortCode = $ShortCode;
+        $this->countTransition = $CountTransition;
     }
 
     public function getId(): ?int
@@ -34,38 +34,38 @@ class Link
         return $this->id;
     }
 
-    public function getOriginalURL(): ?string
+    public function getOriginalUrl(): ?string
     {
-        return $this->OriginalURL;
+        return $this->originalUrl;
     }
 
-    public function setOriginalURL(string $OriginalURL): self
+    public function setOriginalUrl(string $originalUrl): self
     {
-        $this->OriginalURL = $OriginalURL;
+        $this->originalUrl = $originalUrl;
 
         return $this;
     }
 
     public function getShortCode(): ?string
     {
-        return $this->ShortCode;
+        return $this->shortCode;
     }
 
-    public function setShortCode(string $ShortCode): self
+    public function setShortCode(string $shortCode): self
     {
-        $this->ShortCode = $ShortCode;
+        $this->shortCode = $shortCode;
 
         return $this;
     }
 
     public function getCountTransition(): ?int
     {
-        return $this->CountTransition;
+        return $this->countTransition;
     }
 
-    public function setCountTransition(int $CountTransition): self
+    public function setCountTransition(int $countTransition): self
     {
-        $this->CountTransition = $CountTransition;
+        $this->countTransition = $countTransition;
 
         return $this;
     }
