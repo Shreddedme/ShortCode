@@ -15,7 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class LinkController extends WrapperAbstractController
 {
     public function __construct(
-        private readonly LinkRepository $linkRepository,
         private readonly ShortCodeGenerator $codeGenerator,
         private readonly EntityManagerInterface $entityManager
     ){
