@@ -75,7 +75,10 @@ class LinkController extends WrapperAbstractController
     public function delete (Request $request): JsonResponse
     {
         $code = $request->query->get('code');
-        $this->linkRepository->delete($code);
+        $repository = $this->entityManager->getRepository(Link::class);
+        $linkEntity = $repository->findOneBy(['shortCode' => $code]);
+        $this->entityManager->remove($linkEntity);
+        $this->entityManager->flush();
         return $this->json([]);
     }
 }
