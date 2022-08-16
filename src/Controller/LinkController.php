@@ -58,17 +58,35 @@ class LinkController extends WrapperAbstractController
         $code = $request->query->get('code');
         $repository = $this->entityManager->getRepository(Link::class);
         $linkEntity = $repository->findOneBy(['shortCode' => $code]);
+
+        if (!$linkEntity) {
+            throw $this->createNotFoundException(
+                'No product found for request '.$code
+            );
+        }
+
         return $this->json($linkEntity);
+
+
     }
 
     #[Route('/r')]
     public function codeRedirect(Request $request): RedirectResponse
     {
         $code = $request->query->get('code');
-        $linkEntity = $this->linkRepository->getByCode($code);
-        $linkEntity['count_transition']++;
-        $this->linkRepository->update($linkEntity);
-        return $this->redirect($linkEntity['original_url']);
+        $repository = $this->entityManager->getRepository(Link::class);
+        $linkEntity = $repository->findOneBy(['shortCode' => $code]);
+
+        if (!$linkEntity) {
+            throw $this->createNotFoundException(
+                'No product found for request '.$code
+            );
+        }
+
+        $countTransition = $linkEntity->getCountTransition() + 1;
+        $linkEntity->setCountTransition($countTransition);
+        $this->entityManager->flush();
+        return $this->redirect($linkEntity->getOriginalUrl());
     }
 
     #[Route('/link/delete')]
@@ -77,8 +95,16 @@ class LinkController extends WrapperAbstractController
         $code = $request->query->get('code');
         $repository = $this->entityManager->getRepository(Link::class);
         $linkEntity = $repository->findOneBy(['shortCode' => $code]);
+
+        if (!$linkEntity) {
+            throw $this->createNotFoundException(
+                'No product found for request '.$code
+            );
+        }
+
         $this->entityManager->remove($linkEntity);
         $this->entityManager->flush();
+
         return $this->json([]);
     }
 }
