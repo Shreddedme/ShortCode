@@ -30,6 +30,12 @@ class LinkController extends WrapperAbstractController
         ]);
     }
 
+//    #[Route('/link/home_page', name: 'home' )]
+//    function indexAction()
+//    {
+//        return $this->render('index.html.twig');
+//    }
+
     #[Route('/link/create')]
     public function create(Request $request ): JsonResponse
     {
