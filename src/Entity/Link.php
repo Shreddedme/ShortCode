@@ -11,22 +11,27 @@ class Link
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    private ?string $originalUrl = null;
+    private string $originalUrl;
 
     #[ORM\Column(length: 255)]
-    private ?string $shortCode = null;
+    private string $shortCode;
 
     #[ORM\Column]
-    private ?int $countTransition = null;
+    private int $countTransition;
 
-    public function __construct (string $OriginalURL, string $ShortCode, int $CountTransition)
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'links')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user;
+
+    public function __construct (string $OriginalURL, string $ShortCode, int $CountTransition, User $user)
     {
         $this->originalUrl = $OriginalURL;
         $this->shortCode = $ShortCode;
         $this->countTransition = $CountTransition;
+        $this->user = $user;
     }
 
     public function getId(): ?int

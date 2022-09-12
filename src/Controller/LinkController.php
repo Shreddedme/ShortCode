@@ -4,19 +4,20 @@ namespace App\Controller;
 
 use App\CodeGenerator\ShortCodeGenerator;
 use App\Entity\Link;
-use App\Repository\LinkRepository;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class LinkController extends WrapperAbstractController
 {
     public function __construct(
         private readonly ShortCodeGenerator $codeGenerator,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TokenStorageInterface $tokenStorage
     ){
         parent::__construct();
     }
@@ -30,20 +31,18 @@ class LinkController extends WrapperAbstractController
         ]);
     }
 
-//    #[Route('/link/home_page', name: 'home' )]
-//    function indexAction()
-//    {
-//        return $this->render('index.html.twig');
-//    }
-
     #[Route('/link/create')]
-    public function create(Request $request ): JsonResponse
+    public function create(Request $request)
     {
+        $user = $this->tokenStorage->getToken()?->getUser();
+        if (!$user instanceof User) {
+            return new RedirectResponse('/login');
+        }
         $originalUrl = $request->get('originalUrl');
         $linkEntity = null;
         if (filter_var($originalUrl, FILTER_VALIDATE_URL)) {
             $shortCode = $this->codeGenerator->generate();
-            $linkEntity = new Link($originalUrl, $shortCode, 0);
+            $linkEntity = new Link($originalUrl, $shortCode, 0, $user);
             $this->entityManager->persist($linkEntity);
             $this->entityManager->flush();
         }
@@ -71,8 +70,6 @@ class LinkController extends WrapperAbstractController
         }
 
         return $this->json($linkEntity);
-
-
     }
 
     #[Route('/r')]
@@ -91,6 +88,7 @@ class LinkController extends WrapperAbstractController
         $countTransition = $linkEntity->getCountTransition() + 1;
         $linkEntity->setCountTransition($countTransition);
         $this->entityManager->flush();
+
         return $this->redirect($linkEntity->getOriginalUrl());
     }
 
