@@ -93,21 +93,29 @@ class LinkController extends WrapperAbstractController
     }
 
     #[Route('/link/delete')]
-    public function delete (Request $request): JsonResponse
+    public function delete (Request $request)
     {
-        $code = $request->query->get('code');
-        $repository = $this->entityManager->getRepository(Link::class);
-        $linkEntity = $repository->findOneBy(['shortCode' => $code]);
-
+        $user = $this->tokenStorage->getToken()?->getUser();
+        if (!$user instanceof User) {
+            return new RedirectResponse('/login');
+        }
+            $code = $request->query->get('code');
+            $repository = $this->entityManager->getRepository(Link::class);
+            $linkEntity = $repository->findOneBy(['shortCode' => $code]);
         if (!$linkEntity) {
             throw $this->createNotFoundException(
-                'No product found for request '.$code
+                'No product found for request ' . $code
             );
         }
+        if( $linkEntity->getUser() === $user) {
 
-        $this->entityManager->remove($linkEntity);
-        $this->entityManager->flush();
+                $this->entityManager->remove($linkEntity);
+                $this->entityManager->flush();
 
-        return $this->json([]);
+                return $this->json([]);
+        }
+            else {
+                throw  new \Exception('You are not owner ');
+            }
     }
 }
