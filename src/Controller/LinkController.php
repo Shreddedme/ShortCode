@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -32,7 +33,7 @@ class LinkController extends WrapperAbstractController
     }
 
     #[Route('/link/create')]
-    public function create(Request $request)
+    public function create(Request $request): Response
     {
         $user = $this->tokenStorage->getToken()?->getUser();
         if (!$user instanceof User) {
@@ -93,29 +94,28 @@ class LinkController extends WrapperAbstractController
     }
 
     #[Route('/link/delete')]
-    public function delete (Request $request)
+    public function delete (Request $request): Response
     {
         $user = $this->tokenStorage->getToken()?->getUser();
         if (!$user instanceof User) {
             return new RedirectResponse('/login');
         }
-            $code = $request->query->get('code');
-            $repository = $this->entityManager->getRepository(Link::class);
-            $linkEntity = $repository->findOneBy(['shortCode' => $code]);
+        $code = $request->query->get('code');
+        $repository = $this->entityManager->getRepository(Link::class);
+        $linkEntity = $repository->findOneBy(['shortCode' => $code]);
+
         if (!$linkEntity) {
             throw $this->createNotFoundException(
                 'No product found for request ' . $code
             );
         }
-        if( $linkEntity->getUser() === $user) {
-
-                $this->entityManager->remove($linkEntity);
-                $this->entityManager->flush();
-
-                return $this->json([]);
+        if( $linkEntity->getUser() !== $user) {
+            throw  new \Exception('You are not owner ');
         }
-            else {
-                throw  new \Exception('You are not owner ');
-            }
+
+        $this->entityManager->remove($linkEntity);
+        $this->entityManager->flush();
+
+        return $this->json([]);
     }
 }
